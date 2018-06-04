@@ -1,6 +1,6 @@
 /******************************************************************************
 *
-* Copyright (C) 2012 - 2017 Texas Instruments Incorporated - http://www.ti.com/
+* Copyright (C) 2012 - 2015 Texas Instruments Incorporated - http://www.ti.com/
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions
@@ -32,7 +32,7 @@
 *
 * Default linker command file for Texas Instruments MSP432P401R
 *
-* File creation date: 10/13/17
+* File creation date: 2015-09-03
 *
 *****************************************************************************/
 
@@ -42,21 +42,8 @@ MEMORY
 {
     MAIN       (RX) : origin = 0x00000000, length = 0x00040000
     INFO       (RX) : origin = 0x00200000, length = 0x00004000
-#ifdef  __TI_COMPILER_VERSION__
-#if     __TI_COMPILER_VERSION__ >= 15009000
-    ALIAS
-    {
-    SRAM_CODE  (RWX): origin = 0x01000000
-    SRAM_DATA  (RW) : origin = 0x20000000
-    } length = 0x00010000
-#else
-    /* Hint: If the user wants to use ram functions, please observe that SRAM_CODE             */
-    /* and SRAM_DATA memory areas are overlapping. You need to take measures to separate       */
-    /* data from code in RAM. This is only valid for Compiler version earlier than 15.09.0.STS.*/ 
     SRAM_CODE  (RWX): origin = 0x01000000, length = 0x00010000
     SRAM_DATA  (RW) : origin = 0x20000000, length = 0x00010000
-#endif
-#endif
 }
 
 /* The following command line options are set as part of the CCS project.    */
@@ -81,30 +68,15 @@ SECTIONS
     .const  :   > MAIN
     .cinit  :   > MAIN
     .pinit  :   > MAIN
-    .init_array   :     > MAIN
-    .binit        : {}  > MAIN
+    .init_array  :   > MAIN
 
-    /* The following sections show the usage of the INFO flash memory        */
-    /* INFO flash memory is intended to be used for the following            */
-    /* device specific purposes:                                             */
-    /* Flash mailbox for device security operations                          */
     .flashMailbox : > 0x00200000
-    /* TLV table for device identification and characterization              */
-    .tlvTable     : > 0x00201000
-    /* BSL area for device bootstrap loader                                  */
-    .bslArea      : > 0x00202000
 
     .vtable :   > 0x20000000
     .data   :   > SRAM_DATA
     .bss    :   > SRAM_DATA
     .sysmem :   > SRAM_DATA
     .stack  :   > SRAM_DATA (HIGH)
-
-#ifdef  __TI_COMPILER_VERSION__
-#if     __TI_COMPILER_VERSION__ >= 15009000
-    .TI.ramfunc : {} load=MAIN, run=SRAM_CODE, table(BINIT)
-#endif
-#endif
 }
 
 /* Symbolic definition of the WDTCTL register for RTS */
