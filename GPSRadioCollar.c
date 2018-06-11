@@ -1772,6 +1772,9 @@ void initClocks(void)
     WDT_A_CLOCKITERATIONS_128M);
 }
 
+int LED_CHANGE = 1;
+int LED_STATE = 1;
+
 int main(void)
 {
     int GPSDateCheck = 0; //This protects us from satellites giving us incorrect dates from the past.
@@ -1829,9 +1832,20 @@ int main(void)
     MAP_WDT_A_startTimer();
     MAP_Interrupt_enableMaster();
 
+    //@TEST ST 6-11-2018 Using red LED as output for testing
+    P1->DIR |= BIT0;                        // P1.0 set as output
+
     while (1)
     {
         MAP_WDT_A_clearTimer(); //Kick dog
+
+        // @TEST ST 6-11-2018 This is just for testing GUI Composer functionality
+        // Check GUI to see if user wants to change the LED, then set LED_CHANGE
+        if(LED_CHANGE)
+        {
+            P1->OUT ^= BIT0;                    // Blink P1.0 LED
+            LED_STATE = (BIT0 & P1->IN);   // Read value of BIT0 on Port 1 (red LED)
+        }
 
         //VHF beacon on magnet removed condition, this lets researcher see the device actually turned on when he removed
         //the magnet
