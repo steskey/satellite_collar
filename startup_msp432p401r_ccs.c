@@ -55,9 +55,12 @@ extern unsigned long __STACK_END;
 
 
 /* External declarations for the interrupt handlers used by the application. */
-
-/* To be added by user */
-
+extern void EUSCIA0_IRQHandler (void);
+extern void EUSCIA1_IRQHandler (void);
+extern void EUSCIA2_IRQHandler (void);
+extern void RTC_C_IRQHandler(void);
+extern void PORT4_IRQHandler(void);
+extern void SysTick_IRQHandler(void);
 
 /* Interrupt vector table.  Note that the proper constructs must be placed on this to  */
 /* ensure that it ends up at physical address 0x0000.0000 or at the start of          */
@@ -82,7 +85,7 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* Debug monitor handler     */
     0,                                      /* Reserved                  */
     defaultISR,                             /* The PendSV handler        */
-    defaultISR,                             /* The SysTick handler       */
+    SysTick_IRQHandler,                             /* The SysTick handler       */
     defaultISR,                             /* PSS ISR                   */
     defaultISR,                             /* CS ISR                    */
     defaultISR,                             /* PCM ISR                   */
@@ -99,9 +102,9 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* TA2_N ISR                 */
     defaultISR,                             /* TA3_0 ISR                 */
     defaultISR,                             /* TA3_N ISR                 */
-    defaultISR,                             /* EUSCIA0 ISR               */
-    defaultISR,                             /* EUSCIA1 ISR               */
-    defaultISR,                             /* EUSCIA2 ISR               */
+    EUSCIA0_IRQHandler,                     /* EUSCIA0 ISR               */
+    EUSCIA1_IRQHandler,                     /* EUSCIA1 ISR               */
+    EUSCIA2_IRQHandler,                     /* EUSCIA2 ISR               */
     defaultISR,                             /* EUSCIA3 ISR               */
     defaultISR,                             /* EUSCIB0 ISR               */
     defaultISR,                             /* EUSCIB1 ISR               */
@@ -112,7 +115,7 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* T32_INT2 ISR              */
     defaultISR,                             /* T32_INTC ISR              */
     defaultISR,                             /* AES ISR                   */
-    defaultISR,                             /* RTC ISR                   */
+    RTC_C_IRQHandler,                       /* RTC ISR                   */
     defaultISR,                             /* DMA_ERR ISR               */
     defaultISR,                             /* DMA_INT3 ISR              */
     defaultISR,                             /* DMA_INT2 ISR              */
@@ -121,7 +124,7 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* PORT1 ISR                 */
     defaultISR,                             /* PORT2 ISR                 */
     defaultISR,                             /* PORT3 ISR                 */
-    defaultISR,                             /* PORT4 ISR                 */
+    PORT4_IRQHandler,                       /* PORT4 ISR                 */
     defaultISR,                             /* PORT5 ISR                 */
     defaultISR,                             /* PORT6 ISR                 */
     defaultISR,                             /* Reserved 41               */
